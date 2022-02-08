@@ -2,7 +2,9 @@ name: 'Crawl and deploy'
 
 on:
   schedule:
+  # 触发1： 定时触发：每天0:00,4:00,8:00,12:00,16:00,20:00执行定时任务，注意时间默认是国际标准时间，与国内相差有16个小时
     - cron: '0 0,4,8,12,16,20 * * *'
+  # 触发2： 推送触发：排除路径，包含分支  
   push:
     paths-ignore:
       - 'json/version-position.json'
@@ -34,10 +36,10 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
         with:
           source_folder: 'json'
-          destination_repo: 'vikyd/chromium-history-version-position'
+          destination_repo: 'fengzhao-notes/chromium-history-version-position'
           destination_folder: 'json'
-          user_email: 'zwj_fhys@qq.com'
-          user_name: 'vikyd'
+          user_email: 'fengzhao1124@hotmail.com'
+          user_name: 'fengzhao'
           commit_msg: 'feat: update JSON data'
       - name: 'Push to frontend repo'
         uses: crykn/copy_folder_to_another_repo_action@v1.0.6
@@ -45,10 +47,10 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
         with:
           source_folder: 'json/ver-pos-os'
-          destination_repo: 'vikyd/download-chromium-history-version-src'
+          destination_repo: 'fengzhao-notes/download-chromium-history-version-src'
           destination_folder: 'public/json/ver-pos-os'
-          user_email: 'zwj_fhys@qq.com'
-          user_name: 'vikyd'
+          user_email: 'fengzhao1124@hotmail.com'
+          user_name: 'fengzhao'
           commit_msg: 'feat: update JSON data'
   frontend:
     needs: crawler
@@ -57,13 +59,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          repository: 'vikyd/download-chromium-history-version-src'
+          repository: 'fengzhao-notes/download-chromium-history-version-src'
       - name: Install
         run: npm install
       - name: Build
         run: npm run build
       - name: 'Get not modify from github.io repo'
-        run: curl https://raw.githubusercontent.com/vikyd/download-chromium-history-version/master/README.md --output dist/README.md
+        run: curl https://raw.githubusercontent.com/fengzhao-notes/download-chromium-history-version/master/README.md --output dist/README.md
       - name: 'Push to github.io repo'
         uses: cpina/github-action-push-to-another-repository@main
         env:
@@ -72,7 +74,7 @@ jobs:
           source-directory: 'dist'
           destination-repository-name: 'download-chromium-history-version'
           target-branch: 'master'
-          destination-github-username: 'vikyd'
-          user-email: 'zwj_fhys@qq.com'
+          destination-github-username: 'fengzhao'
+          user-email: 'fengzhao1124@hotmail.com'
           commit-message: 'feat: update JSON data'
 
